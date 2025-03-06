@@ -1,0 +1,64 @@
+.page-title{
+    margin-bottom: 24px;
+}
+.tabs {
+  display: flex;
+  gap: 20px;
+  margin-top: 8px;
+
+}
+
+.tabs a {
+  text-decoration: none;
+  font-size: 15px;
+  color: #949494;
+  padding: 8px 16px;
+  position: relative; 
+}
+
+.tabs a.active-tab {
+  color: #191C30;
+}
+
+.tabs a.active-tab::after {
+  content: "";
+  display: block;
+  height: 2px;
+  width: 100%;
+  background-color: #191C30;
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+}
+
+.span{
+  display: block; 
+  width: 100%;
+  height: 0.5px; 
+  background-color: #e4e3e3; 
+
+
+}
+
+.container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.city-info{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.icons {
+  display: flex;
+  gap: 15px; 
+}
+
+.icon {
+  width: 16px;
+  height: 16px;
+  cursor: pointer; 
+}

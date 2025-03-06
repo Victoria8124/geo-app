@@ -1,0 +1,29 @@
+<div class="paginator">
+  <button
+    *ngIf="currentPage > 1"
+    (click)="onPageChange(currentPage - 1)"
+    class="paginator-btn"
+  >
+    <span>&lt;</span>
+  </button>
+
+  <ng-container *ngFor="let page of pages">
+    <button
+      *ngIf="page !== -1"
+      (click)="onPageChange(page)"
+      [class.active]="page === currentPage"
+      class="paginator-btn"
+    >
+      {{ page }}
+    </button>
+    <span *ngIf="page === -1" class="ellipsis">...</span>
+  </ng-container>
+
+  <button
+    *ngIf="currentPage < totalPages"
+    (click)="onPageChange(currentPage + 1)"
+    class="paginator-btn"
+  >
+    <span>&gt;</span>
+  </button>
+</div>

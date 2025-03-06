@@ -1,1 +1,59 @@
 /* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; padding: 0 16px; }
+
+.search-input {
+  width: 225px;
+  height: 32px;
+  border: 1px solid #ccc; /* серый цвет бордера */
+  border-radius: 14px; /* округлённые углы */
+  padding: 0 10px; /* отступы внутри поля */
+  font-size: 14px; /* размер шрифта */
+  outline: none; /* убираем стандартное выделение */
+   padding-left: 35px; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* смещение, размытие и прозрачность */
+}
+
+.search-input:focus {
+  border-color: #aaaaaa; /* изменяем цвет бордера при фокусе (можно поменять на нужный цвет) */
+}
+
+.search-container {
+  position: relative;
+  display: flex;
+  align-items: center; /* Выравнивает элементы по центру по вертикали */
+
+}
+
+.search-icon {
+  position: absolute;
+  left: 10px;  /* Расположим иконку слева внутри поля */
+  font-size: 24px;
+  color: #858686;
+}
+
+.mat-mdc-table {
+    background-color: #ffffff !important;
+}
+
+.mat-toolbar {
+  background-color: transparent !important; /* Прозрачный фон */
+}
+.mdc-table .mat-mdc-header-cell {
+    background: none !important;
+}
+
+.th {
+  color: #E0E0E0;
+}
+
+.mat-mdc-header-cell, .mat-mdc-cell {
+  border-bottom-color: #E0E0E0 !important;
+}
+
+
+.mat-mdc-header-row {
+  color: #949494 !important;
+font-weight: normal !important;
+}

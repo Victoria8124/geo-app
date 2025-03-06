@@ -1,0 +1,36 @@
+
+.paginator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.paginator-btn {
+  background-color: white;
+border: none;
+  padding: 6px 12px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 14px;
+  color: #526ED3;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.paginator-btn.active {
+  background-color: #526ED3; 
+  color: white;
+}
+
+.paginator-btn:hover {
+  background-color: #f1f1f1;
+}
+
+.ellipsis {
+  font-size: 14px;
+  color: #999;
+}
+
+button[disabled] {
+  cursor: not-allowed;
+  opacity: 0.5;
+}

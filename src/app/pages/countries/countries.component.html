@@ -1,0 +1,41 @@
+
+<div class="search-container">
+  <mat-icon class="search-icon">search</mat-icon>
+  <input class="search-input" matInput [(ngModel)]="searchQuery" placeholder="Поиск"  (ngModelChange)="onSearch()">
+</div>
+<div class="page-title">
+  <div class="tabs">
+    <a routerLink="/countries" routerLinkActive="active-tab">Страны</a>
+    <a routerLink="/cities" routerLinkActive="active-tab">Города</a>
+  </div>
+</div>
+<table mat-table [dataSource]="countries" class="mat-elevation-z8">
+  <ng-container matColumnDef="id">
+    <th mat-header-cell *matHeaderCellDef>ID страны</th>
+    <td mat-cell *matCellDef="let element" class="id-cell">
+     <div class="id-container">
+      <span>{{ element.wikiDataId }}</span>
+      <img src="/assets/imgs/icon-16.svg" alt="icon" class="icon" (click)="goToCities(element.name)">
+     </div>
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef>Наименование</th>
+    <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+  </ng-container>
+  <ng-container matColumnDef="code">
+    <th mat-header-cell *matHeaderCellDef>Код страны</th>
+    <td mat-cell *matCellDef="let element">{{ element.code }}</td>
+  </ng-container>
+  <ng-container matColumnDef="currency">
+    <th mat-header-cell *matHeaderCellDef>Код валют</th>
+    <td mat-cell *matCellDef="let element">{{ element.currencyCodes.join(', ') }}</td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+<app-custom-paginator
+  [currentPage]="currentPage"
+  [totalPages]="totalPages"
+  (pageChange)="onPageChange($event)"
+></app-custom-paginator>

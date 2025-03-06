@@ -1,0 +1,32 @@
+
+.city-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; 
+  
+}
+
+.city-details p {
+  width: 45%; 
+    display: flex;
+  flex-direction: column; 
+  font-size: 16px;
+  color: black; 
+}
+strong{
+   color: rgb(124, 124, 124);
+   font-weight: normal;
+}
+.custom-close-btn {
+  border: 1px solid rgb(189, 189, 189);
+  color: rgb(86, 86, 189); 
+  background: transparent; 
+  padding: 8px 16px; 
+  border-radius: 10px;
+ font-size: 16px;
+ font-weight: bold;
+}
+
+.custom-close-btn:hover {
+  background: rgba(0, 0, 255, 0.1);
+}
