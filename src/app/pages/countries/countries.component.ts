@@ -1,14 +1,15 @@
+import { CountriesService } from '../../services/countries.service';
+import { Country } from '../../interfaces/country.interface';
+import { CustomPaginatorComponent } from '../../components/paginator/custom-paginator.component'
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
-import { CountriesService } from '../../services/countries.service';
-import { Country } from '../../interfaces/country.interface';
-import { CustomPaginatorComponent } from '../../components/paginator/custom-paginator.component'
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-countries',
@@ -45,14 +46,15 @@ export class CountriesComponent implements OnInit {
     this.fetchCountries(); // Загружаем список стран при загрузке компонента
   }
 
-  // Получение списка стран с API (без фильтрации)
+  // Получение списка стран с API (с учетом пагинации)
   fetchCountries() {
     const offset = (this.currentPage - 1) * this.pageSize;
-    const limit = this.pageSize;
+    const limit = this.pageSize
 
     this.countriesService.getCountries(offset, limit).subscribe({
-      next: (response: Country[]) => {
-        this.countries = response;
+      next: (response) => {
+        this.countries = response.data;
+        this.totalPages = Math.ceil(response.totalCount / this.pageSize); // обновляем количество страниц
       },
       error: (err) => {
         console.error('Ошибка при загрузке стран:', err);

@@ -1,7 +1,7 @@
+import { Country } from '../interfaces/country.interface';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Country } from '../interfaces/country.interface';
 import { map } from 'rxjs/operators';
 
 
@@ -14,18 +14,29 @@ export class CountriesService {
 
   constructor(private http: HttpClient) {}
 
-  getCountries(offset: number, limit: number): Observable<Country[]> {
+  // Получение списка стран с учетом пагинации
+  getCountries(
+    offset: number,
+    limit: number
+  ): Observable<{ data: Country[]; totalCount: number }> {
     return this.http
-      .get<{ data: Country[] }>(
+      .get<{ data: Country[]; metadata: { totalCount: number } }>(
         `${this.apiUrl}?offset=${offset}&limit=${limit}`
       )
-      .pipe(map((response) => response.data)); 
+      .pipe(
+        map((response) => ({
+          data: response.data,
+          totalCount: response.metadata.totalCount, // Общее количество стран
+        }))
+      );
   }
 
-  searchCountries(query: string): Observable<Country[]> {
-    const url = `${this.apiUrl}?namePrefix=${query}&limit=10`;
-    return this.http
-      .get<{ data: Country[] }>(url)
-      .pipe(map((response) => response.data)); 
-  }
+  // Поиск стран по названию
+    searchCountries(query: string): Observable<Country[]> {
+      const url = `${this.apiUrl}?namePrefix=${query}&limit=10`;
+      return this.http
+        .get<{ data: Country[] }>(url)
+        .pipe(map((response) => response.data));
+    }
 }
+

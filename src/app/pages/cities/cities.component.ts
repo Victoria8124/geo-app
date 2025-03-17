@@ -30,14 +30,14 @@ import { MatDialog } from '@angular/material/dialog';
   templateUrl: './cities.component.html',
   styleUrls: ['./cities.component.scss'],
 })
-export class CityListComponent {
-  selectedCountryName: string  = "";
+export class CitiesComponent {
+  selectedCountryName: string = '';
   selectedCountry: Country | null = null;
   countries: Country[] = [];
   filteredCities: City[] = []; // Это теперь массив городов (тип City[])
   totalPages: number = 0;
   currentPage: number = 1;
-  pageSize: number = 10;
+  pageSize: number = 5;
   searchQuery: string = '';
   displayedColumns: string[] = ['country', 'name', 'region', 'population'];
 
@@ -136,7 +136,7 @@ export class CityListComponent {
     if (this.searchQuery.length >= 2) {
       this.citiesService.searchCities(this.searchQuery).subscribe({
         next: (response: City[]) => {
-          this.filteredCities = response; 
+          this.filteredCities = response;
         },
         error: (err) => {
           console.error('Ошибка при поиске городов:', err);
@@ -146,18 +146,18 @@ export class CityListComponent {
         },
       });
     } else {
-      this.filteredCities = []; 
+      this.filteredCities = [];
     }
   }
 
   getOffsetFromLink(linkObject: { href: string; rel: string }): number {
     if (!linkObject?.href) return 0;
     const offsetMatch = linkObject.href.match(/offset=(\d+)/);
-    return offsetMatch ? parseInt(offsetMatch[1], 10) : 0;
+    return offsetMatch ? parseInt(offsetMatch[1], 5) : 0;
   }
 
   onPageChange(page: number) {
     this.currentPage = page;
-    this.loadCitiesByCountry(); 
+    this.loadCitiesByCountry();
   }
 }
