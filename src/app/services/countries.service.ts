@@ -1,16 +1,14 @@
 import { Country } from '../interfaces/country.interface';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-
+import { Observable, throwError } from 'rxjs';
+import { map, tap, catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
-export class CountriesService {
-  private apiUrl =
-    'http://geodb-free-service.wirefreethought.com/v1/geo/countries';
+export class CountriesApiService {
+  private apiUrl = 'http://geodb-free-service.wirefreethought.com/v1/geo';
 
   constructor(private http: HttpClient) {}
 
@@ -21,7 +19,7 @@ export class CountriesService {
   ): Observable<{ data: Country[]; totalCount: number }> {
     return this.http
       .get<{ data: Country[]; metadata: { totalCount: number } }>(
-        `${this.apiUrl}?offset=${offset}&limit=${limit}`
+        `${this.apiUrl}/countries?offset=${offset}&limit=${limit}`
       )
       .pipe(
         map((response) => ({
@@ -32,11 +30,27 @@ export class CountriesService {
   }
 
   // Поиск стран по названию
-    searchCountries(query: string): Observable<Country[]> {
-      const url = `${this.apiUrl}?namePrefix=${query}&limit=10`;
-      return this.http
-        .get<{ data: Country[] }>(url)
-        .pipe(map((response) => response.data));
-    }
-}
+  searchCountries(query: string): Observable<Country[]> {
+    const url = `${this.apiUrl}/countries?namePrefix=${query}`;
+    return this.http
+      .get<{ data: Country[] }>(url)
+      .pipe(map((response) => response.data));
+  }
 
+  // Получаем код страны по её названию и получаем страну по названию
+  getCountryDetails(countryId: string): Observable<Country> {
+    return this.http
+      .get<{ data: Country }>(
+        `${this.apiUrl}/countries/${countryId}`
+      )
+      .pipe(
+        map((response) => response.data),
+        catchError((error) => {
+          console.error('Ошибка при получении данных о стране:', error);
+          return throwError(
+            () => new Error('Ошибка при получении данных о стране')
+          );
+        })
+      );
+  }
+}
