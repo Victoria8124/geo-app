@@ -43,11 +43,5 @@
     Ничего не найдено по запросу
   </div>
 </div>
-
-<!-- <app-custom-paginator
-  [currentPage]="currentPage"
-  [totalPages]="totalPages"
-  (pageChange)="onPageChange($event)"
-></app-custom-paginator> -->
 <mat-paginator [length]="totalItems" [pageSize]="pageSize"  (page)="onPageEvent($event)"
   [disabled]="isLoading"></mat-paginator>

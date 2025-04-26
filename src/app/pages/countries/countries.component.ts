@@ -32,7 +32,6 @@ import { of, map, Observable } from 'rxjs';
     ReactiveFormsModule,
     MatIconModule,
     RouterModule,
-    // CustomPaginatorComponent,
     MatProgressSpinnerModule,
   ],
   templateUrl: './countries.component.html',
@@ -87,7 +86,7 @@ export class CountriesComponent implements OnInit {
               console.error('Ошибка при поиске стран:', err);
               return of([]);
             }),
-            finalize(() => (this.isLoading = false)) // ✅ finalize теперь внутри switchMap
+            finalize(() => (this.isLoading = false)) 
           );
         })
       )
@@ -99,7 +98,7 @@ export class CountriesComponent implements OnInit {
         }
       });
   }
-  // Получение списка стран с API (с учетом пагинации)
+
   fetchCountries(offset: number = 0, limit: number = this.pageSize) {
     this.isLoading = true;
 
@@ -117,7 +116,7 @@ export class CountriesComponent implements OnInit {
         },
       });
   }
-  // Переход к списку городов по стране
+
   onPageEvent(event: PageEvent) {
     const offset = event.pageIndex * event.pageSize;
     this.pageSize = event.pageSize;

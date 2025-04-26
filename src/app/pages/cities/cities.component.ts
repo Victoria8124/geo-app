@@ -1,10 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { CustomPaginatorComponent } from '../../components/paginator/custom-paginator.component';
-import { FormsModule } from '@angular/forms'; 
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms'; 
 import { Router, RouterModule } from '@angular/router';
 import { CitiesApiService} from '../../services/cities.service'
 import {
@@ -14,30 +13,46 @@ import {
 } from '../../interfaces/cities.interace';
 import { CityViewDialogComponent } from '../../components/popup/view/city-view-dialog.component'
 import { MatDialog } from '@angular/material/dialog';
-import {CountriesApiService} from '../../services/countries.service'
+import {CountriesApiService} from '../../services/countries.service';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { PageEvent, MatPaginator } from '@angular/material/paginator';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  switchMap,
+  finalize,
+  filter,
+} from 'rxjs/operators';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 @Component({
   selector: 'app-cities',
   imports: [
     MatTableModule,
     RouterModule,
     MatIconModule,
-    CustomPaginatorComponent,
     FormsModule,
     CommonModule,
+    MatPaginatorModule,
+    ReactiveFormsModule,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './cities.component.html',
   styleUrls: ['./cities.component.scss'],
 })
 export class CitiesComponent {
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
   selectedCountryName: string = '';
   selectedCountry: Country | null = null;
   countries: Country[] = [];
   filteredCities: City[] = [];
-  totalPages: number = 0;
   currentPage: number = 1;
   pageSize: number = 5;
-  searchQuery: string = '';
+  searchControl: FormControl = new FormControl('');
+
   displayedColumns: string[] = ['country', 'name', 'region', 'population'];
+  totalItems: number = 0;
+  isLoading: boolean = false; // Показывает, идет ли загрузка
 
   constructor(
     private route: ActivatedRoute,
@@ -54,9 +69,20 @@ export class CitiesComponent {
         this.loadCountryByCode(countryId);
       }
     });
+
+    this.searchControl.valueChanges
+      .pipe(debounceTime(300), distinctUntilChanged())
+      .subscribe((value: string) => {
+        if (!value) {
+          this.loadCitiesByCountry(this.selectedCountry?.code || '');
+        } else if (value.length >= 2) {
+          this.onSearch(value);
+        }
+      });
   }
 
   loadCountryByCode(countryCode: string): void {
+    this.isLoading = true;
     this.countriesApiService
       .getCountryDetails(countryCode)
       .subscribe((country: Country) => {
@@ -66,12 +92,15 @@ export class CitiesComponent {
         this.loadCitiesByCountry(country.code);
       });
   }
+
   loadCitiesByCountry(countryCode: string): void {
     if (!countryCode) {
       this.filteredCities = [];
+      this.totalItems = 0;
       return;
     }
 
+    this.isLoading = true;
     this.citiesApiService
       .getCities({
         countryCode,
@@ -81,11 +110,13 @@ export class CitiesComponent {
       .subscribe({
         next: (response: CitiesResponse) => {
           this.filteredCities = response.data || [];
-          this.totalPages = Math.ceil(
-            (response.metadata?.totalCount ?? 0) / this.pageSize
-          );
+          this.totalItems = response.metadata?.totalCount ?? 0;
+          this.isLoading = false; 
         },
-        error: (err) => console.error('Ошибка при загрузке городов:', err),
+        error: (err) => {
+          console.error('Ошибка при загрузке городов:', err);
+          this.isLoading = false;
+        },
       });
   }
 
@@ -112,28 +143,31 @@ export class CitiesComponent {
       },
     });
   }
-  onSearch(): void {
-    if (this.searchQuery.length >= 2) {
-      this.citiesApiService
-        .getCities({
-          namePrefix: this.searchQuery,
-          limit: 5,
-        })
-        .subscribe({
-          next: (response) => {
-            this.filteredCities = response.data || [];
-          },
-          error: (err) => {
-            console.error('Ошибка при поиске городов:', err);
-          },
-        });
-    } else {
-      this.filteredCities = [];
-    }
+
+  onSearch(searchText: string): void {
+    this.isLoading = true;
+    this.filteredCities = [];
+
+    this.citiesApiService
+      .getCities({
+        namePrefix: searchText,
+        limit: 5,
+      })
+      .subscribe({
+        next: (response) => {
+          this.filteredCities = response.data || [];
+          this.isLoading = false;
+        },
+        error: (err) => {
+          console.error('Ошибка при поиске городов:', err);
+          this.isLoading = false;
+        },
+      });
   }
 
-  onPageChange(page: number) {
-    this.currentPage = page;
+  onPageChange(event: PageEvent): void {
+    this.pageSize = event.pageSize;
+    this.currentPage = event.pageIndex + 1;
     if (this.selectedCountry?.code) {
       this.loadCitiesByCountry(this.selectedCountry.code);
     }
