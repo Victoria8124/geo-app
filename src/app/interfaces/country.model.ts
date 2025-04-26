@@ -1,4 +1,4 @@
-export interface Country {
+export interface CountryModel {
   id: string;
   name: string;
   code: string;

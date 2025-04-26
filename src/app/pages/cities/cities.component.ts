@@ -3,17 +3,15 @@ import { ActivatedRoute } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
 import { Component, ViewChild } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms'; 
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { CitiesApiService} from '../../services/cities.service'
-import {
-  City,
-  Country,
-  CitiesResponse,
-} from '../../interfaces/cities.interace';
-import { CityViewDialogComponent } from '../../components/popup/view/city-view-dialog.component'
+import { CitiesApiService } from '../../services/cities.service';
+import { CityModel } from '../../interfaces/city.model';
+import { PaginationResponse } from '../../interfaces/pagination-response.model'
+import { CountryModel } from '../../interfaces/country.model';
+import { CityViewDialogComponent } from '../../components/popup/view/city-view-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-import {CountriesApiService} from '../../services/countries.service';
+import { CountriesApiService } from '../../services/countries.service';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import {
@@ -43,9 +41,9 @@ export class CitiesComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   selectedCountryName: string = '';
-  selectedCountry: Country | null = null;
-  countries: Country[] = [];
-  filteredCities: City[] = [];
+  selectedCountry: CountryModel | null = null;
+  countries: CountryModel[] = [];
+  filteredCities: CityModel[] = [];
   currentPage: number = 1;
   pageSize: number = 5;
   searchControl: FormControl = new FormControl('');
@@ -85,7 +83,7 @@ export class CitiesComponent {
     this.isLoading = true;
     this.countriesApiService
       .getCountryDetails(countryCode)
-      .subscribe((country: Country) => {
+      .subscribe((country: CountryModel) => {
         this.selectedCountry = country;
         this.selectedCountryName = country.name;
         this.countries = [country];
@@ -108,10 +106,10 @@ export class CitiesComponent {
         limit: this.pageSize,
       })
       .subscribe({
-        next: (response: CitiesResponse) => {
+        next: (response: PaginationResponse<CityModel>) => {
           this.filteredCities = response.data || [];
           this.totalItems = response.metadata?.totalCount ?? 0;
-          this.isLoading = false; 
+          this.isLoading = false;
         },
         error: (err) => {
           console.error('Ошибка при загрузке городов:', err);
@@ -127,7 +125,7 @@ export class CitiesComponent {
     }
   }
 
-  openViewDialog(city: City): void {
+  openViewDialog(city: CityModel): void {
     this.citiesApiService.getCityDetails(city.id).subscribe({
       next: (cityDetails) => {
         if (cityDetails) {

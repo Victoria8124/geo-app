@@ -1,4 +1,4 @@
-import { Country } from '../interfaces/country.interface';
+import { Country } from '../interfaces/country.model';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
@@ -40,9 +40,7 @@ export class CountriesApiService {
   // Получаем код страны по её названию и получаем страну по названию
   getCountryDetails(countryId: string): Observable<Country> {
     return this.http
-      .get<{ data: Country }>(
-        `${this.apiUrl}/countries/${countryId}`
-      )
+      .get<{ data: Country }>(`${this.apiUrl}/countries/${countryId}`)
       .pipe(
         map((response) => response.data),
         catchError((error) => {

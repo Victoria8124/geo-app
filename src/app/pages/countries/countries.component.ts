@@ -1,5 +1,5 @@
 import { CountriesApiService } from '../../services/countries.service';
-import { Country } from '../../interfaces/country.interface';
+import { CountryModel } from '../../interfaces/country.model';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -10,14 +10,21 @@ import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { debounceTime, filter, distinctUntilChanged, switchMap, tap, finalize, catchError } from 'rxjs/operators';
+import {
+  debounceTime,
+  filter,
+  distinctUntilChanged,
+  switchMap,
+  tap,
+  finalize,
+  catchError,
+} from 'rxjs/operators';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { PageEvent } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { of, map, Observable } from 'rxjs';
-
 
 @Component({
   selector: 'app-countries',
@@ -38,9 +45,9 @@ import { of, map, Observable } from 'rxjs';
   styleUrls: ['./countries.component.scss'],
 })
 export class CountriesComponent implements OnInit {
-  countries: Country[] = [];
+  countries: CountryModel[] = [];
   displayedColumns: string[] = ['id', 'name', 'code', 'currency'];
-  dataSource = new MatTableDataSource<Country>();
+  dataSource = new MatTableDataSource<CountryModel>();
   isLoading: boolean = false;
 
   totalItems: number = 0;
@@ -64,7 +71,7 @@ export class CountriesComponent implements OnInit {
         switchMap((query) => {
           this.isLoading = true;
 
-          let result$: Observable<Country[]>;
+          let result$: Observable<CountryModel[]>;
 
           if (typeof query === 'string' && query.trim() === '') {
             result$ = this.countriesApiService
@@ -86,11 +93,11 @@ export class CountriesComponent implements OnInit {
               console.error('Ошибка при поиске стран:', err);
               return of([]);
             }),
-            finalize(() => (this.isLoading = false)) 
+            finalize(() => (this.isLoading = false))
           );
         })
       )
-      .subscribe((countries: Country[]) => {
+      .subscribe((countries: CountryModel[]) => {
         this.countries = countries;
         this.dataSource.data = countries;
         if (this.paginator) {
@@ -123,7 +130,7 @@ export class CountriesComponent implements OnInit {
     this.fetchCountries(offset, event.pageSize);
   }
 
-  goToCities(country: Country) {
+  goToCities(country: CountryModel) {
     this.router.navigate(['/cities'], {
       queryParams: {
         countryName: country.name,
