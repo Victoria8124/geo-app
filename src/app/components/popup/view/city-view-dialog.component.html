@@ -1,12 +1,12 @@
 <h2 mat-dialog-title>Информация о городе</h2>
 <mat-dialog-content>
-<div *ngIf="data.cityDetails" class="city-details">
-    <p><strong>Страна:</strong> {{ data.cityDetails.data.country }}</p>
-    <p><strong>Город:</strong> {{ data.cityDetails.data.city }}</p>
-    <p><strong>Население:</strong> {{ data.cityDetails.data.population }}</p>
-    <p><strong>Регион:</strong> {{ data.cityDetails.data.region }}</p>
-    <p><strong>Широта:</strong> {{ data.cityDetails.data.latitude }}</p>
-    <p><strong>Долгота:</strong> {{ data.cityDetails.data.longitude }}</p>
+<div *ngIf="cityDetails" class="city-details">
+    <p><strong>Страна:</strong> {{ cityDetails.country }}</p>
+    <p><strong>Город:</strong> {{ cityDetails.city }}</p>
+    <p><strong>Население:</strong> {{ cityDetails.population }}</p>
+    <p><strong>Регион:</strong> {{ cityDetails.region }}</p>
+    <p><strong>Широта:</strong> {{ cityDetails.latitude }}</p>
+    <p><strong>Долгота:</strong> {{ cityDetails.longitude }}</p>
 </div>
 </mat-dialog-content>
 <mat-dialog-actions>

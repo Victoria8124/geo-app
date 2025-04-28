@@ -1,9 +1,3 @@
-// export interface Country {
-//   id: string;
-//   name: string;
-//   code: string;
-// }
-
 export interface CityModel {
   name: string;
   country: string;
@@ -18,9 +12,3 @@ export interface CityModel {
   deleted: boolean;
   wikiDataId: string;
 }
-// export interface CitiesResponse {
-//   data: CityModel[];
-//   metadata: {
-//     totalCount: number;
-//   };
-// }
