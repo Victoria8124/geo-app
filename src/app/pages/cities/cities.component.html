@@ -8,11 +8,14 @@
 <div class="container">
 
 <div class="filter-bar">
-  <select [(ngModel)]="selectedCountry" (change)="onCountryChange()" name="countrySelect">
-    <option *ngFor="let country of countries" [ngValue]="country">
-      {{ country.name }}
-    </option>
-  </select>
+    <mat-form-field appearance="fill">
+      <mat-select [(value)]="selectedCountry" (selectionChange)="onCountryChange()">
+        <mat-option *ngFor="let country of countries" [value]="country">
+          {{ country.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
 
 </div>
   <div class="search-container">

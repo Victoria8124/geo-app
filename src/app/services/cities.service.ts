@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { City, CitiesResponse } from '../interfaces/city.model';
+import { CityModel } from '../interfaces/city.model';
+import { PaginationResponse } from '../interfaces/pagination-response.model';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +17,7 @@ export class CitiesApiService {
     namePrefix?: string;
     offset?: number;
     limit?: number;
-  }): Observable<CitiesResponse> {
+  }): Observable<PaginationResponse<CityModel>> {
     let params = new HttpParams();
 
     if (options.countryCode) {
@@ -30,11 +31,16 @@ export class CitiesApiService {
     params = params.set('offset', (options.offset ?? 0).toString());
     params = params.set('limit', (options.limit ?? 5).toString());
 
-    return this.http.get<CitiesResponse>(`${this.apiUrl}/cities`, { params });
+    return this.http.get<PaginationResponse<CityModel>>(
+      `${this.apiUrl}/cities`,
+      {
+        params,
+      }
+    );
   }
 
   // Получение данных о конкретном городе
-  getCityDetails(cityId: string): Observable<City> {
-    return this.http.get<City>(`${this.apiUrl}/cities/${cityId}`);
+  getCityDetails(cityId: string): Observable<CityModel> {
+    return this.http.get<CityModel>(`${this.apiUrl}/cities/${cityId}`);
   }
 }

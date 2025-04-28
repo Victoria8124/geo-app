@@ -22,6 +22,9 @@ import {
   filter,
 } from 'rxjs/operators';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+
 @Component({
   selector: 'app-cities',
   imports: [
@@ -33,6 +36,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatPaginatorModule,
     ReactiveFormsModule,
     MatProgressSpinnerModule,
+    MatFormFieldModule,
+    MatSelectModule,
   ],
   templateUrl: './cities.component.html',
   styleUrls: ['./cities.component.scss'],
@@ -59,11 +64,22 @@ export class CitiesComponent {
     private dialog: MatDialog,
     private countriesApiService: CountriesApiService
   ) {}
-
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
       const countryId = params['countryId'];
-      if (countryId) {
+      const countryName = params['countryName'];
+
+      if (countryId && countryName) {
+        // Если есть и код, и название страны — сразу создаем объект страны без запроса на сервер
+        this.selectedCountry = {
+          code: countryId,
+          name: countryName,
+        } as CountryModel;
+        this.selectedCountryName = countryName;
+        this.countries = [this.selectedCountry];
+        this.loadCitiesByCountry(countryId);
+      } else if (countryId) {
+        // Если вдруг есть только код — тогда грузим страну с сервера
         this.loadCountryByCode(countryId);
       }
     });
@@ -79,16 +95,21 @@ export class CitiesComponent {
       });
   }
 
+  // Эту функцию оставляем, вдруг где-то еще отдельно захотим загрузить страну по коду
   loadCountryByCode(countryCode: string): void {
     this.isLoading = true;
-    this.countriesApiService
-      .getCountryDetails(countryCode)
-      .subscribe((country: CountryModel) => {
+    this.countriesApiService.getCountryDetails(countryCode).subscribe({
+      next: (country: CountryModel) => {
         this.selectedCountry = country;
         this.selectedCountryName = country.name;
         this.countries = [country];
         this.loadCitiesByCountry(country.code);
-      });
+      },
+      error: (err) => {
+        console.error('Ошибка при загрузке страны:', err);
+        this.isLoading = false;
+      },
+    });
   }
 
   loadCitiesByCountry(countryCode: string): void {
@@ -118,7 +139,7 @@ export class CitiesComponent {
       });
   }
 
-  onCountryChange() {
+  onCountryChange(): void {
     this.currentPage = 1;
     if (this.selectedCountry?.code) {
       this.loadCitiesByCountry(this.selectedCountry.code);
