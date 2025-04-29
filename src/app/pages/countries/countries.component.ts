@@ -12,10 +12,8 @@ import { RouterModule } from '@angular/router';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import {
   debounceTime,
-  filter,
   distinctUntilChanged,
   switchMap,
-  tap,
   finalize,
   catchError,
 } from 'rxjs/operators';
@@ -25,6 +23,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { PageEvent } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { of, map, Observable } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-countries',
@@ -59,7 +58,8 @@ export class CountriesComponent implements OnInit {
 
   constructor(
     private countriesApiService: CountriesApiService,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar,
   ) {}
   ngOnInit() {
     this.fetchCountries(0, this.pageSize);
@@ -80,7 +80,7 @@ export class CountriesComponent implements OnInit {
                 map((response) => {
                   this.totalItems = response.totalCount;
                   return response.data;
-                })
+                }),
               );
           } else if (typeof query === 'string' && query.length >= 2) {
             result$ = this.countriesApiService.searchCountries(query);
@@ -89,13 +89,15 @@ export class CountriesComponent implements OnInit {
           }
 
           return result$.pipe(
-            catchError((err) => {
-              console.error('Ошибка при поиске стран:', err);
+            catchError(() => {
+              this.snackBar.open('Ошибка при поиске стран', 'Закрыть', {
+                duration: 3000,
+              });
               return of([]);
             }),
-            finalize(() => (this.isLoading = false))
+            finalize(() => (this.isLoading = false)),
           );
-        })
+        }),
       )
       .subscribe((countries: CountryModel[]) => {
         this.countries = countries;
@@ -118,8 +120,10 @@ export class CountriesComponent implements OnInit {
           this.totalItems = response.totalCount;
           this.dataSource.data = this.countries;
         },
-        error: (err) => {
-          console.error('Ошибка при загрузке стран:', err);
+        error: () => {
+          this.snackBar.open('Ошибка при загрузке списка стран', 'Закрыть', {
+            duration: 3000,
+          });
         },
       });
   }

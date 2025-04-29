@@ -3,11 +3,11 @@
     <a routerLink="/countries" routerLinkActive="active-tab">Страны</a>
     <a routerLink="/cities" routerLinkActive="active-tab">Города</a>
   </div>
-   <span class="span"></span>
-</div> 
-<div class="container">
+  <span class="span"></span>
+</div>
 
-<div class="filter-bar">
+<div class="container">
+  <div class="filter-bar">
     <mat-form-field appearance="fill">
       <mat-select [(value)]="selectedCountry" (selectionChange)="onCountryChange()">
         <mat-option *ngFor="let country of countries" [value]="country">
@@ -15,55 +15,58 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-
-
-</div>
+  </div>
   <div class="search-container">
     <mat-icon class="search-icon">search</mat-icon>
-    <input class="search-input" matInput  [formControl]="searchControl"  [disabled]="isLoading" placeholder="Поиск"
-     >
+    <input class="search-input" matInput [formControl]="searchControl" [disabled]="isLoading" placeholder="Поиск">
   </div>
 </div>
+
 <div class="table-wrapper" [class.loading]="isLoading">
   <table mat-table [dataSource]="filteredCities">
-  <ng-container matColumnDef="country">
-    <th mat-header-cell *matHeaderCellDef>Страна</th>
-    <td mat-cell *matCellDef="let city">{{ city.country }}</td>
-  </ng-container>
+    <ng-container matColumnDef="country">
+      <th mat-header-cell *matHeaderCellDef>Страна</th>
+      <td mat-cell *matCellDef="let city">{{ city.country }}</td>
+    </ng-container>
 
-  <ng-container matColumnDef="name">
-    <th mat-header-cell *matHeaderCellDef>Город</th>
-    <td mat-cell *matCellDef="let city">{{ city.name }}</td>
-  </ng-container>
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Город</th>
+      <td mat-cell *matCellDef="let city">{{ city.name }}</td>
+    </ng-container>
 
-  <ng-container matColumnDef="region">
-    <th mat-header-cell *matHeaderCellDef>Регион</th>
-    <td mat-cell *matCellDef="let city">{{ city.region }}</td>
-  </ng-container>
+    <ng-container matColumnDef="region">
+      <th mat-header-cell *matHeaderCellDef>Регион</th>
+      <td mat-cell *matCellDef="let city">{{ city.region }}</td>
+    </ng-container>
 
-  <ng-container matColumnDef="population">
-    <th mat-header-cell *matHeaderCellDef>Население</th>
-    <td mat-cell *matCellDef="let city">
-      <div  class="city-info">
-        <span>{{ city.population }}</span>
-        <div class="icons">
-          <img src="/assets/imgs/edit.svg" alt="icon" class="icon">
-          <img src="/assets/imgs/eye.svg" alt="icon" class="icon" (click)="openViewDialog(city)">
+    <ng-container matColumnDef="population">
+      <th mat-header-cell *matHeaderCellDef>Население</th>
+      <td mat-cell *matCellDef="let city">
+        <div class="city-info">
+          <span>{{ city.population }}</span>
+          <div class="icons">
+            <img src="/assets/imgs/edit.svg" alt="icon" class="icon">
+            <img src="/assets/imgs/eye.svg" alt="icon" class="icon" (click)="openViewDialog(city)">
+          </div>
         </div>
-      </div>
-    </td>
-  </ng-container>
+      </td>
+    </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-</table>
-  <div class="loader-overlay" *ngIf="isLoading">
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+  @if(isLoading){
+  <div class="loader-overlay">
     <mat-spinner></mat-spinner>
   </div>
-  
-  <div *ngIf="!isLoading && filteredCities.length === 0" class="no-data">
+  }
+
+  @if(!isLoading && filteredCities.length === 0){
+  <div class="no-data">
     Ничего не найдено по запросу
   </div>
+  }
+
 </div>
 
 <mat-paginator [length]="totalItems" [pageSize]="pageSize" (page)="onPageChange($event)"

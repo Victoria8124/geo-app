@@ -35,7 +35,7 @@ export class CitiesApiService {
       `${this.apiUrl}/cities`,
       {
         params,
-      }
+      },
     );
   }
 

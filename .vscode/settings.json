@@ -1,3 +1,10 @@
 {
-  "cSpell.words": ["Страны"]
+  "cSpell.words": ["Страны"],
+   "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true,
+    "source.fixAll.eslint": true
+  },
+  "eslint.validate": ["javascript", "typescript", "html"],
+  "prettier.requireConfig": true
 }

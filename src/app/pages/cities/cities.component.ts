@@ -4,26 +4,21 @@ import { MatTableModule } from '@angular/material/table';
 import { Component, ViewChild } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { CitiesApiService } from '../../services/cities.service';
 import { CityModel } from '../../interfaces/city.model';
-import { PaginationResponse } from '../../interfaces/pagination-response.model'
+import { PaginationResponse } from '../../interfaces/pagination-response.model';
 import { CountryModel } from '../../interfaces/country.model';
 import { CityViewDialogComponent } from '../../components/popup/view/city-view-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { CountriesApiService } from '../../services/countries.service';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
-import {
-  debounceTime,
-  distinctUntilChanged,
-  switchMap,
-  finalize,
-  filter,
-} from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-cities',
@@ -55,14 +50,14 @@ export class CitiesComponent {
 
   displayedColumns: string[] = ['country', 'name', 'region', 'population'];
   totalItems: number = 0;
-  isLoading: boolean = false; // Показывает, идет ли загрузка
+  isLoading: boolean = false; 
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
     private citiesApiService: CitiesApiService,
     private dialog: MatDialog,
-    private countriesApiService: CountriesApiService
+    private countriesApiService: CountriesApiService,
+    private snackBar: MatSnackBar,
   ) {}
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
@@ -70,7 +65,6 @@ export class CitiesComponent {
       const countryName = params['countryName'];
 
       if (countryId && countryName) {
-        // Если есть и код, и название страны — сразу создаем объект страны без запроса на сервер
         this.selectedCountry = {
           code: countryId,
           name: countryName,
@@ -79,7 +73,6 @@ export class CitiesComponent {
         this.countries = [this.selectedCountry];
         this.loadCitiesByCountry(countryId);
       } else if (countryId) {
-        // Если вдруг есть только код — тогда грузим страну с сервера
         this.loadCountryByCode(countryId);
       }
     });
@@ -95,7 +88,6 @@ export class CitiesComponent {
       });
   }
 
-  // Эту функцию оставляем, вдруг где-то еще отдельно захотим загрузить страну по коду
   loadCountryByCode(countryCode: string): void {
     this.isLoading = true;
     this.countriesApiService.getCountryDetails(countryCode).subscribe({
@@ -106,8 +98,10 @@ export class CitiesComponent {
         this.loadCitiesByCountry(country.code);
       },
       error: (err) => {
-        console.error('Ошибка при загрузке страны:', err);
         this.isLoading = false;
+        this.snackBar.open('Ошибка при загрузке страны!', 'Закрыть', {
+          duration: 3000,
+        });
       },
     });
   }
@@ -132,9 +126,11 @@ export class CitiesComponent {
           this.totalItems = response.metadata?.totalCount ?? 0;
           this.isLoading = false;
         },
-        error: (err) => {
-          console.error('Ошибка при загрузке городов:', err);
+        error: () => {
           this.isLoading = false;
+          this.snackBar.open('Ошибка при загрузке страны!', 'Закрыть', {
+            duration: 3000,
+          });
         },
       });
   }
@@ -157,8 +153,10 @@ export class CitiesComponent {
           console.error('Данные о городе не получены');
         }
       },
-      error: (err) => {
-        console.error('Ошибка при получении данных города:', err);
+      error: () => {
+        this.snackBar.open('Ошибка при загрузке страны!', 'Закрыть', {
+          duration: 3000,
+        });
       },
     });
   }
@@ -177,9 +175,11 @@ export class CitiesComponent {
           this.filteredCities = response.data || [];
           this.isLoading = false;
         },
-        error: (err) => {
-          console.error('Ошибка при поиске городов:', err);
+        error: () => {
           this.isLoading = false;
+          this.snackBar.open('Ошибка при загрузке страны!', 'Закрыть', {
+            duration: 3000,
+          });
         },
       });
   }

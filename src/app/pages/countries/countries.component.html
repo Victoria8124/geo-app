@@ -1,4 +1,3 @@
-
 <div class="search-container">
   <mat-icon class="search-icon">search</mat-icon>
   <input class="search-input" matInput [disabled]="isLoading" [formControl]="searchControl" placeholder="Поиск">
@@ -35,13 +34,16 @@
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
-  <div class="loader-overlay" *ngIf="isLoading">
+@if(isLoading){
+  <div class="loader-overlay">
     <mat-spinner></mat-spinner>
-  </div>
-  
-  <div *ngIf="!isLoading && countries.length === 0" class="no-data">
+  </div> 
+}
+@if(!isLoading && countries.length === 0){
+  <div class="no-data">
     Ничего не найдено по запросу
   </div>
+}
 </div>
 <mat-paginator [length]="totalItems" [pageSize]="pageSize"  (page)="onPageEvent($event)"
   [disabled]="isLoading"></mat-paginator>

@@ -1,7 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { CityDetails } from '../../../interfaces/city-details.modul'
+import {
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef,
+} from '@angular/material/dialog';
+import { CityDetails } from '../../../interfaces/city-details.modul';
 
 @Component({
   selector: 'app-city-view-dialog',
@@ -15,9 +19,8 @@ export class CityViewDialogComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: { cityDetails: { data: CityDetails } },
-    private dialogRef: MatDialogRef<CityViewDialogComponent>
+    private dialogRef: MatDialogRef<CityViewDialogComponent>,
   ) {
-    console.log('Data received in dialog:', data); // Проверка данных в модальном окне
     this.cityDetails = data.cityDetails?.data || null;
   }
   closeDialog(): void {

@@ -2,7 +2,7 @@ import { CountryModel } from '../interfaces/country.model';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { map, tap, catchError } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -15,17 +15,18 @@ export class CountriesApiService {
   // Получение списка стран с учетом пагинации
   getCountries(
     offset: number,
-    limit: number
+    limit: number,
   ): Observable<{ data: CountryModel[]; totalCount: number }> {
     return this.http
-      .get<{ data: CountryModel[]; metadata: { totalCount: number } }>(
-        `${this.apiUrl}/countries?offset=${offset}&limit=${limit}`
-      )
+      .get<{
+        data: CountryModel[];
+        metadata: { totalCount: number };
+      }>(`${this.apiUrl}/countries?offset=${offset}&limit=${limit}`)
       .pipe(
         map((response) => ({
           data: response.data,
           totalCount: response.metadata.totalCount, // Общее количество стран
-        }))
+        })),
       );
   }
 
@@ -46,9 +47,9 @@ export class CountriesApiService {
         catchError((error) => {
           console.error('Ошибка при получении данных о стране:', error);
           return throwError(
-            () => new Error('Ошибка при получении данных о стране')
+            () => new Error('Ошибка при получении данных о стране'),
           );
-        })
+        }),
       );
   }
 }
