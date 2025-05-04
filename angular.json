@@ -92,6 +92,8 @@
               }
             ],
             "styles": [
+                "node_modules/@taiga-ui/core/styles/taiga-ui.css",
+                "node_modules/@taiga-ui/core/styles/themes/dark.css",
               "@angular/material/prebuilt-themes/azure-blue.css",
               "src/styles.scss",
               "node_modules/bootstrap-icons/font/bootstrap-icons.css"

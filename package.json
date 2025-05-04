@@ -13,6 +13,7 @@
   },
   "private": true,
   "dependencies": {
+    "@angular/animations": "^19.2.0",
     "@angular/cdk": "^19.2.1",
     "@angular/common": "^19.2.0",
     "@angular/compiler": "^19.2.0",
@@ -24,8 +25,14 @@
     "@angular/router": "^19.2.0",
     "@ngx-translate/core": "^16.0.4",
     "@ngx-translate/http-loader": "^16.0.1",
+    "@taiga-ui/addon-commerce": "^4.35.0",
+    "@taiga-ui/cdk": "^4.35.0",
+    "@taiga-ui/core": "^4.35.0",
+    "@taiga-ui/icons": "^4.35.0",
+    "@taiga-ui/kit": "^4.35.0",
     "bootstrap-icons": "^1.11.3",
     "rxjs": "~7.8.0",
+    "taiga-ui": "^4.35.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
   },

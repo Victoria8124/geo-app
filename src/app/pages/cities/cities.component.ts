@@ -191,4 +191,5 @@ export class CitiesComponent {
       this.loadCitiesByCountry(this.selectedCountry.code);
     }
   }
+
 }
