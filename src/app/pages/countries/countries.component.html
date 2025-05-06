@@ -1,4 +1,4 @@
-<div class="search-container">
+<!-- <div class="search-container">
   <mat-icon class="search-icon">search</mat-icon>
   <input class="search-input" matInput [disabled]="isLoading" [formControl]="searchControl" placeholder="Поиск">
 </div>
@@ -46,4 +46,67 @@
 }
 </div>
 <mat-paginator [length]="totalItems" [pageSize]="pageSize"  (page)="onPageEvent($event)"
-  [disabled]="isLoading"></mat-paginator>
+  [disabled]="isLoading"></mat-paginator> -->
+
+
+<!-- Навигационные вкладки -->
+<!-- Заголовок с вкладками -->
+<div class="page-title">
+  <div class="tabs">
+    <a routerLink="/countries" routerLinkActive="active-tab">Страны</a>
+    <a routerLink="/cities" routerLinkActive="active-tab">Города</a>
+  </div>
+</div>
+
+<!-- Поисковое поле -->
+<div class="search-container">
+  <mat-icon class="search-icon">search</mat-icon>
+  <tui-input [formControl]="searchControl" class="search-input" [disabled]="isLoading" 
+    placeholder="Поиск">
+    поиск
+    <input tuiTextfieldLegacy type="text" />
+  </tui-input>
+</div>
+
+<!-- Таблица стран -->
+<div class="table-wrapper" [class.loading]="isLoading">
+  <table tuiTable class="table">
+    <thead>
+      <tr>
+        <th tuiTh>ID страны</th>
+        <th tuiTh>Наименование</th>
+        <th tuiTh>Код страны</th>
+        <th tuiTh>Код валют</th>
+      </tr>
+    </thead>
+  <tbody>
+    <tr *ngFor="let country of countries">
+     
+      <td tuiTd>
+         <div class="id-container">
+        {{ country['wikiDataId'] }}
+        <img src="/assets/imgs/icon-16.svg" alt="icon" class="icon" (click)="goToCities(country)">
+      </div>
+      </td>
+     
+      <td tuiTd>{{ country.name }}</td>
+      <td tuiTd>{{ country.code }}</td>
+      <td tuiTd>{{ country['currencyCodes']?.join(', ') }}</td>
+    </tr>
+  </tbody>
+  </table>
+
+  <!-- Прелоадер -->
+  <div *ngIf="isLoading" class="loader-overlay">
+    <tui-loader></tui-loader>
+  </div>
+
+  <!-- Нет данных -->
+  <div *ngIf="!isLoading && countries.length === 0" class="no-data">
+    Ничего не найдено по запросу
+  </div>
+</div>
+
+<!-- Пагинация -->
+<tui-pagination [length]="totalItems" [index]="pageIndex" (indexChange)="onPageEvent($event)">
+</tui-pagination>

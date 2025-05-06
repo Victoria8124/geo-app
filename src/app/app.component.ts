@@ -1,3 +1,4 @@
+import { TuiRoot } from "@taiga-ui/core";
 import { RouterOutlet } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -14,7 +15,8 @@ import { CommonModule } from '@angular/common';
     MatFormFieldModule,
     MatDialogModule,
     CommonModule,
-  ],
+      TuiRoot
+],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
