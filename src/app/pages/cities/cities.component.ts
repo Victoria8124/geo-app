@@ -20,6 +20,15 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
+import {ScrollingModule} from '@angular/cdk/scrolling';
+import {ChangeDetectionStrategy} from '@angular/core';
+import {TuiLet} from '@taiga-ui/cdk';
+import {TuiDataList, TuiLoader, TuiScrollable, TuiScrollbar, TuiTextfieldComponent} from '@taiga-ui/core';
+import {TuiChevron, TuiFilterByInputPipe, TuiPagination, TuiSelectDirective} from '@taiga-ui/kit';
+import {TuiComboBoxModule, TuiInputModule} from '@taiga-ui/legacy';
+
+import {IndexChange} from './index-change.directive';
+import {TuiTableDirective, TuiTableTd, TuiTableTh} from '@taiga-ui/addon-table';
 @Component({
   selector: 'app-cities',
   imports: [
@@ -33,13 +42,35 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     MatProgressSpinnerModule,
     MatFormFieldModule,
     MatSelectModule,
+    // IndexChange,
+    ScrollingModule,
+    TuiComboBoxModule,
+    TuiDataList,
+    TuiFilterByInputPipe,
+    TuiLet,
+    TuiScrollable,
+    TuiScrollbar,
+    TuiTextfieldComponent,
+    IndexChange,
+    ScrollingModule,
+    TuiComboBoxModule,
+    TuiDataList,
+    TuiSelectDirective,
+    TuiChevron,
+    TuiInputModule,
+    TuiTableDirective,
+    TuiTableTh,
+    TuiTableTd,
+    TuiLoader,
+    TuiPagination,
   ],
   templateUrl: './cities.component.html',
   styleUrls: ['./cities.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CitiesComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-
+  formControl = new FormControl();
   selectedCountryName: string = '';
   selectedCountry: CountryModel | null = null;
   countries: CountryModel[] = [];
@@ -47,10 +78,10 @@ export class CitiesComponent {
   currentPage: number = 1;
   pageSize: number = 5;
   searchControl: FormControl = new FormControl('');
-
+  pageIndex = 0;
   displayedColumns: string[] = ['country', 'name', 'region', 'population'];
   totalItems: number = 0;
-  isLoading: boolean = false; 
+  isLoading: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -191,5 +222,10 @@ export class CitiesComponent {
       this.loadCitiesByCountry(this.selectedCountry.code);
     }
   }
+
+  // onPageEvent(index: number): void {
+  //   this.pageIndex = index;
+  //   // this.loadCitiesByCountry(index, this.pageSize);
+  // }
 
 }

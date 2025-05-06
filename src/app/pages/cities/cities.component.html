@@ -7,21 +7,55 @@
 </div>
 
 <div class="container">
-  <div class="filter-bar">
-    <mat-form-field appearance="fill">
+<div class="filter-bar">
+   <!-- <mat-form-field appearance="fill">
       <mat-select [(value)]="selectedCountry" (selectionChange)="onCountryChange()">
         <mat-option *ngFor="let country of countries" [value]="country">
           {{ country.name }}
         </mat-option>
       </mat-select>
     </mat-form-field>
-  </div>
+    -->
+  <tui-combo-box [formControl]="formControl">
+    Country
+    <ng-container *tuiDataList>
+      <!--48 = 44 height + 4 margin-->
+      <!--8 = data list padding-->
+      <cdk-virtual-scroll-viewport
+        *tuiLet="countries | tuiFilterByInput as items"
+        appendOnly
+        tuiScrollable
+        class="scroll"
+        [itemSize]="48"
+        [style.height.px]="items.length * 48 + 8"
+        (indexChange)="list.handleFocusLossIfNecessary()"
+      >
+        <tui-data-list #list>
+          <button
+            *cdkVirtualFor="let country of countries"
+            tuiOption
+            type="button"
+            [value]="country"
+          >
+            {{ country.name }}
+          </button>
+        </tui-data-list>
+      </cdk-virtual-scroll-viewport>
+    </ng-container>
+  </tui-combo-box>
+</div>
   <div class="search-container">
-    <mat-icon class="search-icon">search</mat-icon>
-    <input class="search-input" matInput [formControl]="searchControl" [disabled]="isLoading" placeholder="Поиск">
+<!--    <mat-icon class="search-icon">search</mat-icon>-->
+<!--    <input class="search-input" matInput [formControl]="searchControl" [disabled]="isLoading" placeholder="Поиск">-->
+    <!-- Поисковое поле -->
+    <tui-input [formControl]="searchControl" class="search-input" [disabled]="isLoading"
+               placeholder="Поиск">
+      поиск
+      <input tuiTextfieldLegacy type="text" />
+    </tui-input>
   </div>
 </div>
-
+<!--
 <div class="table-wrapper" [class.loading]="isLoading">
   <table mat-table [dataSource]="filteredCities">
     <ng-container matColumnDef="country">
@@ -66,8 +100,53 @@
     Ничего не найдено по запросу
   </div>
   }
+</div>
+-->
+<div class="table-wrapper" [class.loading]="isLoading">
+  <table tuiTable class="table">
+    <thead>
+    <tr>
+      <th tuiTh>Страна</th>
+      <th tuiTh>Город</th>
+      <th tuiTh>Регион</th>
+      <th tuiTh>Население</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let city of filteredCities">
+      <td tuiTd>
+          {{ city.country}}
+      </td>
+      <td tuiTd>
+        {{ city.region}}
+      </td>
+      <td tuiTd>
+        {{ city.region}}
+      </td>
+      <td tuiTd>
 
+          {{ city.population}}
+        <div class="icons">
+          <img src="/assets/imgs/edit.svg" alt="icon" class="icon">
+          <img src="/assets/imgs/eye.svg" alt="icon" class="icon" (click)="openViewDialog(city)">
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <!-- Прелоадер -->
+  <div *ngIf="isLoading" class="loader-overlay">
+    <tui-loader></tui-loader>
+  </div>
+
+  <!-- Нет данных -->
+  <div *ngIf="!isLoading && filteredCities.length === 0" class="no-data">
+    Ничего не найдено по запросу
+  </div>
 </div>
 
-<mat-paginator [length]="totalItems" [pageSize]="pageSize" (page)="onPageChange($event)"
-  [disabled]="isLoading"></mat-paginator>
+<!-- Пагинация -->
+<!--<mat-paginator [length]="totalItems" [pageSize]="pageSize" (page)="onPageChange($event)"-->
+<!--  [disabled]="isLoading"></mat-paginator>-->
+<tui-pagination [length]="totalItems" [index]="pageIndex"  ></tui-pagination>

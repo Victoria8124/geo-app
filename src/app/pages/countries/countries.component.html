@@ -17,7 +17,7 @@
       <span>{{ element.wikiDataId }}</span>
       <img src="/assets/imgs/icon-16.svg" alt="icon" class="icon" (click)="goToCities(element)">
      </div>
-    </td> 
+    </td>
   </ng-container>
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef>Наименование</th>
@@ -37,7 +37,7 @@
 @if(isLoading){
   <div class="loader-overlay">
     <mat-spinner></mat-spinner>
-  </div> 
+  </div>
 }
 @if(!isLoading && countries.length === 0){
   <div class="no-data">
@@ -56,12 +56,12 @@
     <a routerLink="/countries" routerLinkActive="active-tab">Страны</a>
     <a routerLink="/cities" routerLinkActive="active-tab">Города</a>
   </div>
+  <span class="span"></span>
 </div>
 
 <!-- Поисковое поле -->
 <div class="search-container">
-  <mat-icon class="search-icon">search</mat-icon>
-  <tui-input [formControl]="searchControl" class="search-input" [disabled]="isLoading" 
+  <tui-input [formControl]="searchControl" class="search-input" [disabled]="isLoading"
     placeholder="Поиск">
     поиск
     <input tuiTextfieldLegacy type="text" />
@@ -81,14 +81,14 @@
     </thead>
   <tbody>
     <tr *ngFor="let country of countries">
-     
+
       <td tuiTd>
          <div class="id-container">
         {{ country['wikiDataId'] }}
         <img src="/assets/imgs/icon-16.svg" alt="icon" class="icon" (click)="goToCities(country)">
       </div>
       </td>
-     
+
       <td tuiTd>{{ country.name }}</td>
       <td tuiTd>{{ country.code }}</td>
       <td tuiTd>{{ country['currencyCodes']?.join(', ') }}</td>
