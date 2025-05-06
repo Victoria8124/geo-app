@@ -1,11 +1,13 @@
+import {Directive, Output, inject} from '@angular/core';
 import {VIRTUAL_SCROLL_STRATEGY} from '@angular/cdk/scrolling';
-import {Directive, inject, Output} from '@angular/core';
+import {Observable} from 'rxjs';
 
 @Directive({
   standalone: true,
-  selector: '[indexChange]',
+  selector: '[indexScrolled]',
 })
-export class IndexChange {
+export class IndexScrolledDirective {
   @Output()
-  public readonly indexChange = inject(VIRTUAL_SCROLL_STRATEGY).scrolledIndexChange;
+  readonly indexScrolled: Observable<number> =
+    inject(VIRTUAL_SCROLL_STRATEGY).scrolledIndexChange;
 }

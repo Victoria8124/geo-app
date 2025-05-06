@@ -1,56 +1,3 @@
-<!-- <div class="search-container">
-  <mat-icon class="search-icon">search</mat-icon>
-  <input class="search-input" matInput [disabled]="isLoading" [formControl]="searchControl" placeholder="Поиск">
-</div>
-<div class="page-title">
-  <div class="tabs">
-    <a routerLink="/countries" routerLinkActive="active-tab">Страны</a>
-    <a routerLink="/cities" routerLinkActive="active-tab">Города</a>
-  </div>
-</div>
-<div class="table-wrapper" [class.loading]="isLoading">
-  <table mat-table  [dataSource]="dataSource" class="mat-elevation-z8">
-  <ng-container matColumnDef="id">
-    <th mat-header-cell *matHeaderCellDef>ID страны</th>
-    <td mat-cell *matCellDef="let element" class="id-cell">
-     <div class="id-container">
-      <span>{{ element.wikiDataId }}</span>
-      <img src="/assets/imgs/icon-16.svg" alt="icon" class="icon" (click)="goToCities(element)">
-     </div>
-    </td>
-  </ng-container>
-  <ng-container matColumnDef="name">
-    <th mat-header-cell *matHeaderCellDef>Наименование</th>
-    <td mat-cell *matCellDef="let element">{{ element.name }}</td>
-  </ng-container>
-  <ng-container matColumnDef="code">
-    <th mat-header-cell *matHeaderCellDef>Код страны</th>
-    <td mat-cell *matCellDef="let element">{{ element.code }}</td>
-  </ng-container>
-  <ng-container matColumnDef="currency">
-    <th mat-header-cell *matHeaderCellDef>Код валют</th>
-    <td mat-cell *matCellDef="let element">{{ element.currencyCodes.join(', ') }}</td>
-  </ng-container>
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-</table>
-@if(isLoading){
-  <div class="loader-overlay">
-    <mat-spinner></mat-spinner>
-  </div>
-}
-@if(!isLoading && countries.length === 0){
-  <div class="no-data">
-    Ничего не найдено по запросу
-  </div>
-}
-</div>
-<mat-paginator [length]="totalItems" [pageSize]="pageSize"  (page)="onPageEvent($event)"
-  [disabled]="isLoading"></mat-paginator> -->
-
-
-<!-- Навигационные вкладки -->
-<!-- Заголовок с вкладками -->
 <div class="page-title">
   <div class="tabs">
     <a routerLink="/countries" routerLinkActive="active-tab">Страны</a>
@@ -59,7 +6,6 @@
   <span class="span"></span>
 </div>
 
-<!-- Поисковое поле -->
 <div class="search-container">
   <tui-input [formControl]="searchControl" class="search-input" [disabled]="isLoading"
     placeholder="Поиск">
@@ -68,7 +14,6 @@
   </tui-input>
 </div>
 
-<!-- Таблица стран -->
 <div class="table-wrapper" [class.loading]="isLoading">
   <table tuiTable class="table">
     <thead>
@@ -101,12 +46,10 @@
     <tui-loader></tui-loader>
   </div>
 
-  <!-- Нет данных -->
   <div *ngIf="!isLoading && countries.length === 0" class="no-data">
     Ничего не найдено по запросу
   </div>
 </div>
 
-<!-- Пагинация -->
 <tui-pagination [length]="totalItems" [index]="pageIndex" (indexChange)="onPageEvent($event)">
 </tui-pagination>

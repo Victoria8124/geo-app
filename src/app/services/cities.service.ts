@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { CityModel } from '../interfaces/city.model';
 import { PaginationResponse } from '../interfaces/pagination-response.model';
 
@@ -40,7 +40,12 @@ export class CitiesApiService {
   }
 
   // Получение данных о конкретном городе
-  getCityDetails(cityId: string): Observable<CityModel> {
-    return this.http.get<CityModel>(`${this.apiUrl}/cities/${cityId}`);
-  }
+getCityDetails(cityId: string): Observable<CityModel> {
+  return this.http
+    .get<{ data: CityModel }>(`${this.apiUrl}/cities/${cityId}`)
+    .pipe(
+      map(response => response.data)
+    );
+}
+
 }
