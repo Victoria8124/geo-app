@@ -76,7 +76,7 @@ export class CitiesComponent {
     this.selectedCountry = country;
     this.onCountryChange();
   });
- }
+ } 
 
   /* Инициализация параметров из URL */
    initRouteListener(): void {
@@ -88,6 +88,9 @@ export class CitiesComponent {
       }
     });
   }
+
+
+ /** ================== ЗАГРУЗКА ДАННЫХ ================== **/
 
   /* загрузка страны по `countryId` */
    loadCountryById(countryId: string): void {
@@ -106,45 +109,7 @@ export class CitiesComponent {
         this.isLoading = false;
       }
     });
-  }
-
-  /** Сброс данных о городах */
-   resetCityData(): void {
-    this.selectedCountry = null;
-    this.filteredCities = [];
-    this.totalCities = 0;
-  }
-
-
- /**  Обработка изменений в поисковом инпуте */
- initSearchListener(): void {
-  this.searchControl.valueChanges
-    .pipe(
-      debounceTime(300),
-      distinctUntilChanged()
-    )
-    .subscribe((value: string | null) => {
-
-      const query = value?.trim() ?? '';
-
-      this.pageIndex = 0; 
-      this.countries = [];
-      this.isLoading = true;
-
-      if (query.length >= 2) {
-        this.searchCities(query, this.pageIndex, this.pageSize);
-            } else if (query.length === 0) {
-                this.loadCountries();
-                this.filteredCities = [];
-                this.totalCities = 0;
-                this.isLoading = false;
-                if (this.selectedCountry) {
-                  this.loadCitiesByCountry(this.selectedCountry.code);
-                } else {
-                  this.isLoading = false;
-                  }
-         }});
-  }
+  } 
 
 /** Загрузка списка стран */
   loadCountries(offset: number = 0): void {
@@ -164,33 +129,8 @@ export class CitiesComponent {
   });
 }
 
-  /**  Поиск городов */
-  searchCities(query: string, pageIndex: number = 0, pageSize: number = 10): void {
-  this.isLoading = true;
-
-  const options = {
-    namePrefix: query,
-    offset: pageIndex * pageSize,
-    limit: pageSize,
-  };
-
-  this.citiesApiService.getCities(options).subscribe({
-    next: (response) => {
-      console.log('Ответ на поиск городов:', response);
-      this.filteredCities = response.data;
-      this.totalCities = response.metadata?.totalCount ?? 0;
-      this.isLoading = false;
-        this.cdr.detectChanges();
-    },
-    error: () => {
-      this.showError('Не удалось загрузить. Попробуйте снова.');
-      this.isLoading = false;
-    }
-  });
- }
-
   /** Загрузка городов по стране */
-loadCitiesByCountry(countryCode: string): void {
+  loadCitiesByCountry(countryCode: string): void {
   this.isLoading = true;
 
   const options = {
@@ -212,6 +152,8 @@ loadCitiesByCountry(countryCode: string): void {
     }
   });
 }
+
+/** ================== ОБРАБОТКА СОБЫТИЙ ================== **/
 
 /**  Обработка скролла */
 onScroll(event: Event): void {
@@ -239,6 +181,85 @@ onScroll(event: Event): void {
   }
  }
 
+ /** Пагинация */
+ onPageChange(page: number): void {
+  this.pageIndex = page;
+
+  const query = this.searchControl.value?.trim() ?? '';
+
+  if (this.selectedCountry) {
+    this.loadCitiesByCountry(this.selectedCountry.code);
+    return;
+  }
+
+  if (query.length >= 2) {
+    this.searchCities(query, this.pageIndex, this.pageSize);
+  } 
+  else {
+    this.loadCountries(this.pageIndex * this.pageSize);
+  }
+ }
+
+  /**  Обработка изменений в поисковом инпуте */
+ initSearchListener(): void {
+  this.searchControl.valueChanges
+    .pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    )
+    .subscribe((value: string | null) => {
+
+      const query = value?.trim() ?? '';
+
+      this.pageIndex = 0; 
+      this.countries = [];
+      this.isLoading = true;
+
+      if (query.length >= 2) {
+        this.searchCities(query, this.pageIndex, this.pageSize);
+            } else if (query.length === 0) {
+                this.loadCountries();
+                this.filteredCities = [];
+                this.totalCities = 0;
+                if (this.selectedCountry) {
+                  this.loadCitiesByCountry(this.selectedCountry.code);
+                } else {
+                  this.isLoading = false;
+                  }
+         }});
+  }
+
+  /**  Поиск городов */
+  searchCities(query: string, pageIndex: number = 0, pageSize: number = 10): void {
+  this.isLoading = true;
+
+  const options = {
+    namePrefix: query,
+    offset: pageIndex * pageSize,
+    limit: pageSize,
+  };
+
+  this.citiesApiService.getCities(options).subscribe({
+    next: (response) => {
+      console.log('Ответ на поиск городов:', response);
+      this.filteredCities = response.data;
+      this.totalCities = response.metadata?.totalCount ?? 0;
+      this.isLoading = false;
+        this.cdr.detectChanges();
+    },
+    error: () => {
+      this.showError('Не удалось загрузить. Попробуйте снова.');
+      this.isLoading = false;
+    }
+  });
+ }
+
+ /** Сброс данных о городах */
+   resetCityData(): void {
+    this.selectedCountry = null;
+    this.filteredCities = [];
+    this.totalCities = 0;
+  }
 
   /**  Открытие диалога */
   openViewDialog(city: CityModel): void {
@@ -275,25 +296,4 @@ onScroll(event: Event): void {
     })
     .subscribe();
   }
-
-  /** Пагинация */
- onPageChange(page: number): void {
-  this.pageIndex = page;
-
-  const query = this.searchControl.value?.trim() ?? '';
-
-  if (this.selectedCountry) {
-    this.loadCitiesByCountry(this.selectedCountry.code);
-    return;
-  }
-
-  if (query.length >= 2) {
-    this.searchCities(query, this.pageIndex, this.pageSize);
-  } 
-  else {
-    this.loadCountries(this.pageIndex * this.pageSize);
-  }
- }
-
-
 }
