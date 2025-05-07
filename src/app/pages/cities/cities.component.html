@@ -1,4 +1,4 @@
-<div class="page-title">
+<!-- <div class="page-title">
   <div class="tabs">
     <a routerLink="/countries" routerLinkActive="active-tab">Страны</a>
     <a routerLink="/cities" routerLinkActive="active-tab">Города</a>
@@ -61,6 +61,80 @@
         </td>
       </tr>
     </tbody>
+  </table> -->
+
+  <!-- Прелоадер -->
+  <!-- <div *ngIf="isLoading" class="loader-overlay">
+    <tui-loader></tui-loader>
+  </div> -->
+
+  <!-- Нет данных -->
+  <!-- <div *ngIf="!isLoading && filteredCities.length === 0" class="no-data">
+    Ничего не найдено по запросу
+  </div>
+</div> -->
+
+<!-- Пагинация -->
+  <!-- <tui-pagination [length]="totalItems" [index]="pageIndex" (indexChange)="onPageChange($event)"></tui-pagination> -->
+<div class="page-title">
+  <div class="tabs">
+    <a routerLink="/countries" routerLinkActive="active-tab">Страны</a>
+    <a routerLink="/cities" routerLinkActive="active-tab">Города</a>
+  </div>
+  <span class="span"></span>
+</div>
+
+<div class="container">
+  <!-- Поиск стран -->
+  <div class="search-container">
+    <tui-input [formControl]="searchControl" class="search-input" [disabled]="isLoading" placeholder="Поиск стран">
+      <input tuiTextfieldLegacy type="text" />
+    </tui-input>
+  </div>
+
+  <!-- Комбобокс выбора страны -->
+  <div class="filter-bar">
+    <tui-combo-box [formControl]="formControl" [stringify]="stringifyCountry" [disabled]="isLoading">
+      Country
+      <ng-container *tuiDataList>
+        <cdk-virtual-scroll-viewport class="scroll" tuiScrollable appendOnly [itemSize]="48" [style.height.px]="150"
+          (scroll)="onScroll($event)">
+
+          <tui-data-list>
+            <button *cdkVirtualFor="let country of countries" tuiOption type="button" [value]="country">
+              {{ country.name }}
+            </button>
+          </tui-data-list>
+        </cdk-virtual-scroll-viewport>
+      </ng-container>
+    </tui-combo-box>
+  </div>
+</div>
+
+<div class="table-wrapper" [class.loading]="isLoading">
+  <table tuiTable class="table">
+    <thead>
+      <tr>
+        <th tuiTh>Страна</th>
+        <th tuiTh>Город</th>
+        <th tuiTh>Регион</th>
+        <th tuiTh>Население</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let city of filteredCities">
+        <td tuiTd>{{ city.country }}</td>
+        <td tuiTd>{{ city.name }}</td>
+        <td tuiTd>{{ city.region }}</td>
+        <td tuiTd>
+          {{ city.population }}
+          <div class="icons">
+            <img src="/assets/imgs/edit.svg" alt="icon" class="icon">
+            <img src="/assets/imgs/eye.svg" alt="icon" class="icon" (click)="openViewDialog(city)">
+          </div>
+        </td>
+      </tr>
+    </tbody>
   </table>
 
   <!-- Прелоадер -->
@@ -75,4 +149,5 @@
 </div>
 
 <!-- Пагинация -->
-  <tui-pagination [length]="totalItems" [index]="pageIndex" (indexChange)="onPageChange($event)"></tui-pagination>
+<tui-pagination [length]="totalCities" [index]="pageIndex" (indexChange)="onPageChange($event)">
+</tui-pagination>

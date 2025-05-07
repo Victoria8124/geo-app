@@ -39,6 +39,7 @@ export class CitiesApiService {
     );
   }
 
+
   // Получение данных о конкретном городе
 getCityDetails(cityId: string): Observable<CityModel> {
   return this.http
