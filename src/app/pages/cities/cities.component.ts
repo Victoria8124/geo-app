@@ -284,8 +284,8 @@ export class CitiesComponent {
     this.loadCountries();
   }
 
-  /** ✅ Инициализация параметров из URL */
-  private initRouteListener(): void {
+  /** Инициализация параметров из URL */
+   initRouteListener(): void {
     this.route.queryParams.subscribe((params) => {
       const countryId = params['countryId'];
 
@@ -295,8 +295,8 @@ export class CitiesComponent {
     });
   }
 
-  /** ✅ Загрузка страны по `countryId` */
-  private loadCountryById(countryId: string): void {
+  /**  Загрузка страны по `countryId` */
+   loadCountryById(countryId: string): void {
     this.isLoading = true;
 
     this.countriesApiService.getCountryDetails(countryId).subscribe({
@@ -314,15 +314,16 @@ export class CitiesComponent {
     });
   }
 
-  /** ✅ Сброс данных о городах */
-  private resetCityData(): void {
+  /** Сброс данных о городах */
+   resetCityData(): void {
     this.selectedCountry = null;
     this.filteredCities = [];
     this.totalCities = 0;
   }
 
-/** ✅ Обработка изменений в поисковом инпуте */
-private initSearchListener(): void {
+
+/**  Обработка изменений в поисковом инпуте */
+initSearchListener(): void {
   this.searchControl.valueChanges
     .pipe(
       debounceTime(300),
@@ -331,25 +332,47 @@ private initSearchListener(): void {
     .subscribe((value: string | null) => {
       console.log('Поиск запущен. Введено значение:', value);
 
-      this.pageIndex = 0;
+      const query = value?.trim() ?? '';
+
+      this.pageIndex = 0; // Сбросим страницу при новом поисковом запросе
       this.countries = [];
 
-      const query = value ?? '';
-
       if (query.length >= 2) {
-        console.log('Отправляем запрос на поиск стран:', query);
-        this.searchCountries(query);
-      } else {
-        console.log('Сбрасываем поиск. Загружаем все страны.');
+        this.searchCities(query, this.pageIndex, this.pageSize);
+      
+      }    else if (query.length === 0) {
+        console.log('Инпут очищен. Загружаем все страны и города.');
         this.loadCountries();
+        this.loadCities();
+      } 
+      else {
+        this.loadCountries(0);
       }
     });
 }
+/** Обработка изменений в поисковом инпуте */
+// initSearchListener(): void {
+//   this.searchControl.valueChanges
+//     .pipe(debounceTime(300), distinctUntilChanged())
+//     .subscribe((value: string | null) => {
+//       const query = value?.trim() ?? '';
+//       this.pageIndex = 0;
 
+//       console.log('Поиск запущен. Введено значение:', query);
 
-
-/** ✅ Загрузка списка стран */
-private loadCountries(offset: number = 0): void {
+//       if (query.length >= 2) {
+//         console.log('Поиск стран по запросу:', query);
+//         this.searchCities(query, this.pageIndex, this.pageSize);
+//       } 
+//       else if (query.length === 0) {
+//         console.log('Инпут очищен. Загружаем все страны и города.');
+//         this.loadCountries();
+//         this.loadCities();
+//       }
+//     });
+// }
+/** Загрузка списка стран */
+loadCountries(offset: number = 0): void {
   this.isLoading = true;
   console.log(`Загрузка стран с offset: ${offset}`);
 
@@ -366,29 +389,36 @@ private loadCountries(offset: number = 0): void {
     }
   });
 }
-
-/** ✅ Поиск стран */
-private searchCountries(query: string): void {
+/**  Поиск городов */
+searchCities(query: string, pageIndex: number = 0, pageSize: number = 10): void {
   this.isLoading = true;
-  console.log('Поиск стран начат для:', query);
 
-  this.countriesApiService.searchCountries(query).subscribe({
-    next: (data) => {
-      console.log('Ответ на поиск стран:', data);
-      this.countries = data;
-      this.totalCountries = data.length;
+  console.log('Поиск городов начат для:', query, `Страница: ${pageIndex}, Лимит: ${pageSize}`);
+
+  const options = {
+    namePrefix: query,
+    offset: pageIndex * pageSize,
+    limit: pageSize,
+  };
+
+  this.citiesApiService.getCities(options).subscribe({
+    next: (response) => {
+      console.log('Ответ на поиск городов:', response);
+      this.filteredCities = response.data;
+      this.totalCities = response.metadata?.totalCount ?? 0;
       this.isLoading = false;
     },
     error: (err) => {
-      console.error('Ошибка при поиске стран:', err);
+      console.error('Ошибка при поиске городов:', err);
       this.isLoading = false;
     }
   });
 }
 
 
-  /** ✅ Загрузка городов по стране */
-  private loadCities(): void {
+
+  /** Загрузка городов по стране */
+  loadCities(): void {
     if (!this.selectedCountry) {
       this.resetCityData();
       return;
@@ -413,9 +443,7 @@ private searchCountries(query: string): void {
       }
     });
   }
-
-  /** ✅ Обработка скролла */
-/** ✅ Обработка скролла */
+/**  Обработка скролла */
 onScroll(event: Event): void {
   const target = event.target as HTMLElement;
   const scrollTop = target.scrollTop;
@@ -429,13 +457,13 @@ onScroll(event: Event): void {
   }
 }
 
-  /** ✅ Изменение страны */
+  /**  Изменение страны */
   onCountryChange(): void {
     this.pageIndex = 0;
     this.loadCities();
   }
 
-  /** ✅ Открытие диалога */
+  /**  Открытие диалога */
   openViewDialog(city: CityModel): void {
     this.citiesApiService.getCityDetails(city.id).subscribe({
       next: (data) => {
@@ -461,9 +489,17 @@ onScroll(event: Event): void {
     });
   }
 
-  /** ✅ Пагинация */
-  onPageChange(page: number): void {
-    this.pageIndex = page;
-    this.loadCities();
+  /** Пагинация */
+onPageChange(page: number): void {
+  this.pageIndex = page;
+
+  const query = this.searchControl.value?.trim() ?? '';
+
+  if (query.length >= 2) {
+    this.searchCities(query, this.pageIndex, this.pageSize);
+  } else {
+    this.loadCountries(this.pageIndex * this.pageSize);
   }
+}
+
 }

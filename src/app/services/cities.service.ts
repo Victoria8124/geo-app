@@ -12,32 +12,58 @@ export class CitiesApiService {
     'http://geodb-free-service.wirefreethought.com/v1/geo';
 
   constructor(private http: HttpClient) {}
-  getCities(options: {
-    countryCode?: string;
-    namePrefix?: string;
-    offset?: number;
-    limit?: number;
-  }): Observable<PaginationResponse<CityModel>> {
-    let params = new HttpParams();
+  // getCities(options: {
+  //   countryCode?: string;
+  //   namePrefix?: string;
+  //   offset?: number;
+  //   limit?: number;
+  // }): Observable<PaginationResponse<CityModel>> {
+  //   let params = new HttpParams();
 
-    if (options.countryCode) {
-      params = params.set('countryIds', options.countryCode);
-    }
+  //   if (options.countryCode) {
+  //     params = params.set('countryIds', options.countryCode);
+  //   }
 
-    if (options.namePrefix) {
-      params = params.set('namePrefix', options.namePrefix);
-    }
+  //   if (options.namePrefix) {
+  //     params = params.set('namePrefix', options.namePrefix);
+  //   }
 
-    params = params.set('offset', (options.offset ?? 0).toString());
-    params = params.set('limit', (options.limit ?? 5).toString());
+  //   params = params.set('offset', (options.offset ?? 0).toString());
+  //   params = params.set('limit', (options.limit ?? 5).toString());
 
-    return this.http.get<PaginationResponse<CityModel>>(
-      `${this.apiUrl}/cities`,
-      {
-        params,
-      },
-    );
+  //   return this.http.get<PaginationResponse<CityModel>>(
+  //     `${this.apiUrl}/cities`,
+  //     {
+  //       params,
+  //     },
+  //   );
+  // }
+getCities(options: {
+  countryCode?: string;
+  namePrefix?: string;
+  offset?: number;
+  limit?: number;
+}): Observable<PaginationResponse<CityModel>> {
+  let params = new HttpParams();
+
+  if (options.countryCode) {
+    params = params.set('countryIds', options.countryCode);
   }
+
+  if (options.namePrefix) {
+    params = params.set('namePrefix', options.namePrefix);
+  }
+
+  params = params.set('offset', (options.offset ?? 0).toString());
+  params = params.set('limit', (options.limit ?? 10).toString());
+
+  console.log('Запрос к серверу:', params.toString());
+
+  return this.http.get<PaginationResponse<CityModel>>(
+    `${this.apiUrl}/cities`,
+    { params }
+  );
+}
 
 
   // Получение данных о конкретном городе

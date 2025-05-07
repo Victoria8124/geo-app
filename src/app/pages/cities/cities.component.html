@@ -85,13 +85,6 @@
 </div>
 
 <div class="container">
-  <!-- Поиск стран -->
-  <div class="search-container">
-    <tui-input [formControl]="searchControl" class="search-input" [disabled]="isLoading" placeholder="Поиск стран">
-      <input tuiTextfieldLegacy type="text" />
-    </tui-input>
-  </div>
-
   <!-- Комбобокс выбора страны -->
   <div class="filter-bar">
     <tui-combo-box [formControl]="formControl" [stringify]="stringifyCountry" [disabled]="isLoading">
@@ -109,6 +102,15 @@
       </ng-container>
     </tui-combo-box>
   </div>
+
+  <!-- Поиск стран -->
+  <div class="search-container">
+    <tui-input [formControl]="searchControl" class="search-input" [disabled]="isLoading" placeholder="Поиск стран">
+      поиск
+      <input tuiTextfieldLegacy type="text" />
+    </tui-input>
+  </div>
+
 </div>
 
 <div class="table-wrapper" [class.loading]="isLoading">
