@@ -1,6 +1,6 @@
 export interface CountryModel {
-wikiDataId?: string;    // Теперь это явное свойство
-  currencyCodes?: string[]; // Это массив строк, так как мы используем `.join(', ')`
+wikiDataId?: string;  
+  currencyCodes?: string[]; 
   id: string;
   name: string;
   code: string;
