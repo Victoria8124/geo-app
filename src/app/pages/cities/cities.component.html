@@ -129,10 +129,13 @@
         <td tuiTd>{{ city.name }}</td>
         <td tuiTd>{{ city.region }}</td>
         <td tuiTd>
-          {{ city.population }}
-          <div class="icons">
-            <img src="/assets/imgs/edit.svg" alt="icon" class="icon">
+          <div class="actions-column">
+            {{ city.population }}
+            <div>
+             <img src="/assets/imgs/edit.svg" alt="icon" class="icon">
             <img src="/assets/imgs/eye.svg" alt="icon" class="icon" (click)="openViewDialog(city)">
+            </div>
+
           </div>
         </td>
       </tr>

@@ -1,74 +1,106 @@
-.page-title{
-    margin-bottom: 24px;
-}
-.tabs {
-  display: flex;
-  gap: 20px;
-  margin-top: 8px;
+.page-title {
+  margin-bottom: 20px;
+  .tabs {
+    display: flex;
+    gap: 20px;
 
-}
 
-.tabs a {
-  text-decoration: none;
-  font-size: 15px;
-  color: #949494;
-  padding: 8px 16px;
+    a {
+      text-decoration: none;
+      font-size: 15px;
+      color: #949494;
+      padding: 8px 16px;
+      position: relative;
+    }
+
+    a.active-tab {
+      color: #191C30;
+    }
+
+    a.active-tab::after {
+      content: "";
+      display: block;
+      height: 2px;
+      width: 100%;
+      background-color: #191C30;
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+    }
+  }
+  .span{
+    display: block;
+    width: 100%;
+    height: 0.5px;
+    background-color: #e4e3e3;
+  }
+}
+.table-wrapper {
   position: relative;
-}
+  margin-bottom: 20px;
 
-.tabs a.active-tab {
-  color: #191C30;
-}
+  .loader-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.8);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
-.tabs a.active-tab::after {
-  content: "";
-  display: block;
-  height: 1px;
-  width: 100%;
-  background-color: #191C30;
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-}
+  .no-data {
+    text-align: center;
+    padding: 20px;
+    font-style: italic;
+    color: #999;
+  }
 
-.span{
-  display: block;
-  width: 100%;
-  height: 0.5px;
-  background-color: #e4e3e3;
-}
+  table {
+    width: 100%;
+    border-collapse: collapse;
 
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border: 1px solid #E0E0E0;
+    }
+  }
+}
 .container{
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 30px;
 }
-
-
 .city-info{
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.icons {
+.actions-column {
   display: flex;
-  gap: 15px;
+  justify-content: space-between;
+  align-items: center;
+  
+  div{
+  display: flex;
+  gap: 10px;
+  cursor: pointer;
+  }
 }
 
-.icon {
-  width: 16px;
-  height: 16px;
-  cursor: pointer;
-}
 .table-wrapper {
   position: relative;
 }
 
 .search-container {
-  // display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 30px;
+
   width: 250px;
 
 }

@@ -1,12 +1,8 @@
 import { CountriesApiService } from '../../services/countries.service';
 import { CountryModel } from '../../interfaces/country.model';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatTableModule } from '@angular/material/table';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormGroup, FormsModule } from '@angular/forms';
-import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterModule } from '@angular/router';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import {
@@ -16,27 +12,21 @@ import {
   finalize,
   catchError,
 } from 'rxjs/operators';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { of, map, Observable } from 'rxjs';
 	import {TuiPagination} from '@taiga-ui/kit';
 	import {TuiTable} from '@taiga-ui/addon-table';
   	import {TuiInputModule} from '@taiga-ui/legacy';
     	import {TuiLoader} from '@taiga-ui/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import {TuiAlertService} from '@taiga-ui/core';
 
 @Component({
   selector: 'app-countries',
   standalone: true,
   imports: [
     CommonModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatInputModule,
-    MatFormFieldModule,
     FormsModule,
     ReactiveFormsModule,
-    MatIconModule,
     RouterModule,
     MatProgressSpinnerModule,
      TuiInputModule,
@@ -44,7 +34,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     TuiPagination,
     TuiTable,
     FormsModule
-
   ],
   templateUrl: './countries.component.html',
   styleUrls: ['./countries.component.scss'],
@@ -57,8 +46,8 @@ export class CountriesComponent implements OnInit {
   totalItems = 0;
   pageSize = 5;
   searchControl = new FormControl('');
-  
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
+  private readonly alerts = inject(TuiAlertService);
 
   form: FormGroup;
   dataSource: any;
@@ -66,7 +55,6 @@ export class CountriesComponent implements OnInit {
 
   constructor(
     private countriesApiService: CountriesApiService,
-    private snackBar: MatSnackBar,
     private router: Router,
   ) {
     this.form = new FormGroup({
@@ -80,7 +68,7 @@ export class CountriesComponent implements OnInit {
 
 ngOnInit(): void {
   this.fetchCountries(0, this.pageSize);
-
+/*подписываемся на изменения в инпуте*/
   this.searchControl.valueChanges
     .pipe(
       debounceTime(300),
@@ -102,9 +90,7 @@ ngOnInit(): void {
 
         return result$.pipe(
           catchError(() => {
-            this.snackBar.open('Ошибка при поиске стран', 'Закрыть', {
-              duration: 3000,
-            });
+             this.showError('Не удалось загрузить. Попробуйте снова.');
             return of([]);
           }),
           finalize(() => (this.isLoading = false))
@@ -113,13 +99,10 @@ ngOnInit(): void {
     )
     .subscribe((countries: CountryModel[]) => {
       this.countries = countries;
-      if (this.paginator) {
-        this.paginator.firstPage();
-      }
     });
 }
 
-
+/*запрос на страны*/
   fetchCountries(offset: number = 0, limit: number = this.pageSize): void {
     this.isLoading = true;
     this.countriesApiService.getCountries(offset, limit).pipe(
@@ -130,15 +113,17 @@ ngOnInit(): void {
         this.totalItems = response.totalCount;
       },
       error: () => {
-        this.snackBar.open('Ошибка при загрузке списка стран', 'Закрыть', { duration: 3000 });
+       this.showError('Не удалось загрузить. Попробуйте снова.');
       }
     });
   }
+  /*пагинатор*/
   onPageEvent(index: number): void {
   this.pageIndex = index;
   this.fetchCountries(index, this.pageSize);
 }
 
+/*переход на другую странцу*/
   goToCities(country: CountryModel) {
     this.router.navigate(['/cities'], {
       queryParams: {
@@ -146,6 +131,16 @@ ngOnInit(): void {
         countryId: country.code,
       },
     });
+  }
+
+    /*внедряем ошибки*/
+  private showError(message: string): void {
+  this.alerts
+    .open(message, {
+      label: 'Ошибка',
+      autoClose: 3000 
+    })
+    .subscribe();
   }
 }
 
