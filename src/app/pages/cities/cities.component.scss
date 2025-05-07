@@ -1,5 +1,6 @@
 .page-title {
   margin-bottom: 20px;
+
   .tabs {
     display: flex;
     gap: 20px;
@@ -28,13 +29,15 @@
       left: 0;
     }
   }
-  .span{
+
+  .span {
     display: block;
     width: 100%;
     height: 0.5px;
     background-color: #e4e3e3;
   }
 }
+
 .table-wrapper {
   position: relative;
   margin-bottom: 20px;
@@ -63,33 +66,37 @@
     width: 100%;
     border-collapse: collapse;
 
-    th, td {
+    th,
+    td {
       padding: 12px;
       text-align: left;
       border: 1px solid #E0E0E0;
     }
   }
 }
-.container{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
 }
-.city-info{
+
+.city-info {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
+
 .actions-column {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  
-  div{
-  display: flex;
-  gap: 10px;
-  cursor: pointer;
+
+  div {
+    display: flex;
+    gap: 10px;
+    cursor: pointer;
   }
 }
 
@@ -104,6 +111,7 @@
   width: 250px;
 
 }
+
 .loader-overlay {
   position: absolute;
   top: 0;
@@ -123,6 +131,7 @@
   font-style: italic;
   color: #999;
 }
+
 .scroll-container {
   max-height: 300px;
   overflow-y: auto;

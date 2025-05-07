@@ -1,6 +1,6 @@
-
 .page-title {
   margin-bottom: 20px;
+
   .tabs {
     display: flex;
     gap: 20px;
@@ -28,7 +28,8 @@
       left: 0;
     }
   }
-  .span{
+
+  .span {
     display: block;
     width: 100%;
     height: 0.5px;
@@ -40,7 +41,7 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 30px;
-width: 250px;
+  width: 250px;
 
 }
 
@@ -71,13 +72,15 @@ width: 250px;
     width: 100%;
     border-collapse: collapse;
 
-    th, td {
+    th,
+    td {
       padding: 12px;
       text-align: left;
       border: 1px solid #E0E0E0;
     }
   }
 }
+
 tui-pagination {
   display: flex;
   justify-content: center;
@@ -88,8 +91,8 @@ tui-pagination {
   height: 16px;
   width: 16px;
   cursor: pointer;
-  margin-left: 10px;  // Отступ от текста
-  vertical-align: middle;  // Вертикальное выравнивание
+  margin-left: 10px; 
+  vertical-align: middle; 
 }
 
 .id-container {
@@ -97,4 +100,3 @@ tui-pagination {
   align-items: center;
   justify-content: space-between;
 }
-

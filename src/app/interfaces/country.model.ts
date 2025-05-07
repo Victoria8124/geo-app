@@ -4,4 +4,5 @@ export interface CountryModel {
   name: string;
   code: string;
   currency: string;
+  currencyCode: string;
 }

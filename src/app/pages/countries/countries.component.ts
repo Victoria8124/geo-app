@@ -14,10 +14,10 @@ import {
 } from 'rxjs/operators';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { of, map, Observable } from 'rxjs';
-	import {TuiPagination} from '@taiga-ui/kit';
-	import {TuiTable} from '@taiga-ui/addon-table';
-  	import {TuiInputModule} from '@taiga-ui/legacy';
-    	import {TuiLoader} from '@taiga-ui/core';
+import {TuiPagination} from '@taiga-ui/kit';
+import {TuiTable} from '@taiga-ui/addon-table';
+import {TuiInputModule} from '@taiga-ui/legacy';
+import {TuiLoader} from '@taiga-ui/core';
 import {TuiAlertService} from '@taiga-ui/core';
 
 @Component({
@@ -66,9 +66,10 @@ export class CountriesComponent implements OnInit {
     });
   }
 
-ngOnInit(): void {
+ ngOnInit(): void {
   this.fetchCountries(0, this.pageSize);
-/*подписываемся на изменения в инпуте*/
+
+ /*подписываемся на изменения в инпуте*/
   this.searchControl.valueChanges
     .pipe(
       debounceTime(300),
@@ -102,7 +103,7 @@ ngOnInit(): void {
     });
 }
 
-/*запрос на страны*/
+ /*запрос на страны*/
   fetchCountries(offset: number = 0, limit: number = this.pageSize): void {
     this.isLoading = true;
     this.countriesApiService.getCountries(offset, limit).pipe(
@@ -121,9 +122,9 @@ ngOnInit(): void {
   onPageEvent(index: number): void {
   this.pageIndex = index;
   this.fetchCountries(index, this.pageSize);
-}
+  }
 
-/*переход на другую странцу*/
+ /*переход на другую странцу*/
   goToCities(country: CountryModel) {
     this.router.navigate(['/cities'], {
       queryParams: {
