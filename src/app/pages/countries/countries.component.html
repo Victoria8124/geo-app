@@ -1,11 +1,3 @@
-<div class="page-title">
-  <div class="tabs">
-    <a routerLink="/countries" routerLinkActive="active-tab">Страны</a>
-    <a routerLink="/cities" routerLinkActive="active-tab">Города</a>
-  </div>
-  <span class="span"></span>
-</div>
-
 <div class="search-container">
   <tui-input [formControl]="searchControl" class="search-input" [disabled]="isLoading"
     placeholder="Поиск">
@@ -25,21 +17,21 @@
       </tr>
     </thead>
   <tbody>
-    <tr *ngFor="let country of countries">
+  <tr *ngFor="let country of countries">
 
-      <td tuiTd>
-         <div class="id-container">
-        {{ country['wikiDataId'] }}
+    <td tuiTd>
+      <div class="id-container">
+        {{ country.wikiDataId ?? 'Нет данных' }}
         <img src="/assets/imgs/icon-16.svg" alt="icon" class="icon" (click)="goToCities(country)">
       </div>
-      </td>
+    </td>
 
-      <td tuiTd>{{ country.name }}</td>
-      <td tuiTd>{{ country.code }}</td>
-      <td tuiTd>{{ country['currencyCodes']?.join(', ') }}</td>
-    </tr>
+    <td tuiTd>{{ country.name }}</td>
+    <td tuiTd>{{ country.code }}</td>
+    <td tuiTd>{{ country.currencyCodes?.join(', ') ?? 'Нет валют' }}</td>
+  </tr>
   </tbody>
-  </table>
+</table>
 
   <!-- Прелоадер -->
   <div *ngIf="isLoading" class="loader-overlay">

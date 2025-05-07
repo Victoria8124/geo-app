@@ -5,6 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { Component } from '@angular/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
+import { HeaderComponent } from "./pages/header/header.component";
 
 
 @Component({
@@ -15,7 +16,8 @@ import { CommonModule } from '@angular/common';
     MatFormFieldModule,
     MatDialogModule,
     CommonModule,
-      TuiRoot
+    TuiRoot,
+    HeaderComponent
 ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',

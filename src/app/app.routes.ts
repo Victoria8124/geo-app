@@ -4,6 +4,7 @@ import { CitiesComponent } from './pages/cities/cities.component';
 import { NgModule } from '@angular/core';
 import { RouterModule} from '@angular/router'; // Импортируем RouterModule и Routes
 
+
 export const routes: Routes = [
   { path: '', redirectTo: 'countries', pathMatch: 'full' },
   { path: 'countries', component: CountriesComponent },
